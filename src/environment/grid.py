@@ -22,6 +22,13 @@ _DIRECTIONS_16: list[tuple[float, float]] = [
     (-0.5, -1),        # NNW
 ]
 
+FACING_VECTORS = {
+    "north": (0, -1),
+    "east": (1, 0),
+    "south": (0, 1),
+    "west": (-1, 0),
+}
+
 class Grid:
     def __init__(self, width: int, height: int):
         self.width = width
@@ -53,19 +60,35 @@ class Grid:
         return obj
 
     def compute_visible_cells(
-        self, agent_x: int, agent_y: int, max_range: int
+        self, agent_x: int, agent_y: int, facing: str, max_range: int, max_angle: int
     ) -> set[tuple[int,int]]:
         """
-        Cast rays in 16 directions from the agent's position. Return the set of (x, y) cells the agent can see. Vision is blocked by cells whose objects block_vision. The blocking cell itself is visible (agent sees the blocker).
+        Cast rays in directions from the agent's position. Return the set of (x, y) cells the agent can see. Vision is blocked by cells whose objects block_vision. The blocking cell itself is visible (agent sees the blocker).
         """
         
         visible: set[tuple[int, int]] = {(agent_x, agent_y)}
 
+        face_dx,face_dy = FACING_VECTORS[facing]
+        
+        half_angle = max_angle / 2
+        cos_threshold = math.cos(math.radians(half_angle))
+        
+        
         for dx, dy in _DIRECTIONS_16:
+            
+            # normalise ray direction
             length = math.sqrt(dx * dx + dy * dy)
             step_x = dx / length
             step_y = dy / length
 
+            dot = (
+                step_x * face_dx + 
+                step_y * face_dy
+            )
+            
+            if dot < cos_threshold:
+                continue
+            
             for dist in range(1, max_range + 1):
                 cx = int(round(agent_x + step_x * dist))
                 cy = int(round(agent_y + step_y * dist))

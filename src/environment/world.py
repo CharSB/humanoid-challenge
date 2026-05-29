@@ -32,13 +32,15 @@ class World:
         agent_x: int, 
         agent_y: int, 
         agent_facing: str = "north",
-        fov_range: int = 5
+        fov_range: int = 5,
+        fov_angle: int = 120
     ):
         self.grid = grid
         self.agent_x = agent_x
         self.agent_y = agent_y
         self.agent_facing = agent_facing
         self.fov_range = fov_range
+        self.fov_angle = fov_angle
         self.tick = 0
         self.inventory: list[WorldObject] = []
         
@@ -60,12 +62,13 @@ class World:
         agent_y = cfg["agent"]["start_y"]
         agent_facing = cfg["agent"].get("start_facing", "north")
         fov_range = cfg.get("fov", {}).get("max_range", 5)
+        fov_angle = cfg.get("fov", {}).get("max_angle", 5)
 
-        return cls(grid, agent_x, agent_y, agent_facing, fov_range)
+        return cls(grid, agent_x, agent_y, agent_facing, fov_range, fov_angle)
     
     def visible_cells(self) -> set[tuple[int, int]]:
         return self.grid.compute_visible_cells(
-            self.agent_x, self.agent_y, self.fov_range
+            self.agent_x, self.agent_y, self.agent_facing ,self.fov_range, self.fov_angle
         )
     
     def move_agent(self, direction: str) -> bool:

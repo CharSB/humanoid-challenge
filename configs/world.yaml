@@ -11,6 +11,7 @@ agent:
 
 fov:
   max_range: 5
+  max_angle: 170
 
 objects:
   - type: short_rock
