@@ -26,11 +26,19 @@ DIRECTION_SYMBOLS: dict[str, str] = {
 }
 
 class World:
-    def __init__(self, grid: Grid, agent_x: int, agent_y: int, agent_facing: str = "north"):
+    def __init__(
+        self, 
+        grid: Grid, 
+        agent_x: int, 
+        agent_y: int, 
+        agent_facing: str = "north",
+        fov_range: int = 5
+    ):
         self.grid = grid
         self.agent_x = agent_x
         self.agent_y = agent_y
         self.agent_facing = agent_facing
+        self.fov_range = fov_range
         self.tick = 0
         self.inventory: list[WorldObject] = []
         
@@ -51,8 +59,14 @@ class World:
         agent_x = cfg["agent"]["start_x"]
         agent_y = cfg["agent"]["start_y"]
         agent_facing = cfg["agent"].get("start_facing", "north")
+        fov_range = cfg.get("fov", {}).get("max_range", 5)
 
-        return cls(grid, agent_x, agent_y, agent_facing)
+        return cls(grid, agent_x, agent_y, agent_facing, fov_range)
+    
+    def visible_cells(self) -> set[tuple[int, int]]:
+        return self.grid.compute_visible_cells(
+            self.agent_x, self.agent_y, self.fov_range
+        )
     
     def move_agent(self, direction: str) -> bool:
         
@@ -104,10 +118,33 @@ class World:
 
         return False
 
-    
-    def render(self) -> str:
+    def render_agent_view(self) -> str:
+        """Fog-of-war view from the agent's perspective."""
+        visible = self.visible_cells()
         agent_symbol = DIRECTION_SYMBOLS[self.agent_facing]
-        return self.grid.render(agent_symbol, self.agent_x, self.agent_y)
+        return self.grid.render(agent_symbol, self.agent_x, self.agent_y, visible)
+
+    def render_full(self) -> str:
+        """Full map with no fog — for dev use."""
+        agent_symbol = DIRECTION_SYMBOLS[self.agent_facing]
+        return self.grid.render(agent_symbol, self.agent_x, self.agent_y, visible_cells=None)
+
+    def render_side_by_side(self) -> str:
+        """Agent fog-of-war view on the left, full map on the right."""
+        agent_lines = self.render_agent_view().splitlines()
+        full_lines = self.render_full().splitlines()
+
+        col_width = max(len(line) for line in agent_lines)
+        header_agent = "Agent View".ljust(col_width)
+        header_full  = "Full Map"
+
+        lines = [f"{header_agent}  |  {header_full}"]
+        lines.append("-" * (col_width + 5 + len(header_full)))
+
+        for agent_line, full_line in zip(agent_lines, full_lines):
+            lines.append(f"{agent_line.ljust(col_width)}  |  {full_line}")
+
+        return "\n".join(lines)
     
     def __str__(self) -> str:
         lines = [
@@ -115,6 +152,6 @@ class World:
             f"Agent: ({self.agent_x}, {self.agent_y})",
             f"Inventory: {[obj.name for obj in self.inventory]}",
             "",
-            self.render(),
+            self.render_side_by_side(),
         ]
         return "\n".join(lines)

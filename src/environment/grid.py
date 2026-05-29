@@ -1,4 +1,26 @@
+import math
+
 from src.environment.objects import WorldObject
+
+# 16 compass directions as unit vectors
+_DIRECTIONS_16: list[tuple[float, float]] = [
+    (0, -1),           # N
+    (0.5, -1),         # NNE  (normalised below)
+    (1, -1),           # NE
+    (1, -0.5),         # ENE
+    (1, 0),            # E
+    (1, 0.5),          # ESE
+    (1, 1),            # SE
+    (0.5, 1),          # SSE
+    (0, 1),            # S
+    (-0.5, 1),         # SSW
+    (-1, 1),           # SW
+    (-1, 0.5),         # WSW
+    (-1, 0),           # W
+    (-1, -0.5),        # WNW
+    (-1, -1),          # NW
+    (-0.5, -1),        # NNW
+]
 
 class Grid:
     def __init__(self, width: int, height: int):
@@ -30,13 +52,51 @@ class Grid:
         self._cells[y][x] = None
         return obj
 
-    def render(self, agent_symbol: str, agent_x: int, agent_y: int) -> str:
+    def compute_visible_cells(
+        self, agent_x: int, agent_y: int, max_range: int
+    ) -> set[tuple[int,int]]:
+        """
+        Cast rays in 16 directions from the agent's position. Return the set of (x, y) cells the agent can see. Vision is blocked by cells whose objects block_vision. The blocking cell itself is visible (agent sees the blocker).
+        """
+        
+        visible: set[tuple[int, int]] = {(agent_x, agent_y)}
+
+        for dx, dy in _DIRECTIONS_16:
+            length = math.sqrt(dx * dx + dy * dy)
+            step_x = dx / length
+            step_y = dy / length
+
+            for dist in range(1, max_range + 1):
+                cx = int(round(agent_x + step_x * dist))
+                cy = int(round(agent_y + step_y * dist))
+
+                if not self.in_bounds(cx, cy):
+                    break
+
+                visible.add((cx, cy))
+
+                obj = self._cells[cy][cx]
+                if obj is not None and obj.blocks_vision:
+                    break
+
+        return visible
+
+    def render(
+        self, 
+        agent_symbol: str, 
+        agent_x: int, 
+        agent_y: int,
+        visible_cells: set[tuple[int, int]]| None = None
+    ) -> str:
+        
         rows = []
         for y in range(self.height):
             row = []
             for x in range(self.width):
                 if x == agent_x and y == agent_y:
                     row.append(agent_symbol)
+                elif visible_cells is not None and (x, y) not in visible_cells:
+                    row.append("?")
                 elif self._cells[y][x] is not None:
                     row.append(self._cells[y][x].symbol)
                 else:

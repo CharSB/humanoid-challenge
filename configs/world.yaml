@@ -9,6 +9,9 @@ agent:
   start_y: 0
   start_facing: south
 
+fov:
+  max_range: 5
+
 objects:
   - type: short_rock
     x: 2
