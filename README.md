@@ -98,21 +98,22 @@ humanoid-challenge/
 ```bash
 # Clone and enter the project
 git clone <your-repo-url>
-cd llm-agent-world
+cd humanoid-challenge
 
 # Create and activate a virtual environment
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 
 # Install dependencies
-pip install anthropic openai pyyaml python-dotenv pytest
+pip install -r requirements.txt
 ```
 
 **API Keys:** Create a `.env` file at the project root
-```bash
+```
 ANTHROPIC_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
 ```
+Note this is not necessary if you intended to use the program in `manual`
 
 ## How to Run
 ### Manual mode (no API key needed)

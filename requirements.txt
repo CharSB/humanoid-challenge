@@ -1,0 +1,5 @@
+anthropic==0.105.2
+openai==2.38.0
+pytest==9.0.3
+python-dotenv==1.2.2
+PyYAML==6.0.3
