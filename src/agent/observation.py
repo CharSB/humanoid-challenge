@@ -25,7 +25,7 @@ def _describe_surroundings(world: World) -> str:
     return "\n".join(lines)
 
 def build_observation(world: World, task: Task) -> str:
-    surroundings = build_observation(world)
+    surroundings = _describe_surroundings(world)
     inventory = (
         ", ".join(obj.name.replace("_", " ") for obj in world.inventory)
         if world.inventory else "empty"

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from src.environment.grid import Grid
 from src.environment.objects import WorldObject, ShortRock, TallRock, Key, Door
+from src.agent.memory import Memory
 
 OBJECTS: dict[str, callable] = {
     "short_rock": lambda cfg: ShortRock(),
@@ -33,7 +34,7 @@ class World:
         agent_y: int, 
         agent_facing: str = "north",
         fov_range: int = 5,
-        fov_angle: int = 120
+        fov_angle: int = 180
     ):
         self.grid = grid
         self.agent_x = agent_x
@@ -43,6 +44,8 @@ class World:
         self.fov_angle = fov_angle
         self.tick = 0
         self.inventory: list[WorldObject] = []
+        self.memory = Memory()
+        
         
     @classmethod
     def from_yaml(cls, path: str | Path) -> "World":
