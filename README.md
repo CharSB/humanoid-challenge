@@ -97,7 +97,7 @@ humanoid-challenge/
 **Requirements:** Python 3.12+
 ```bash
 # Clone and enter the project
-git clone <your-repo-url>
+git clone https://github.com/CharSB/humanoid-challenge/tree/main#
 cd humanoid-challenge
 
 # Create and activate a virtual environment
