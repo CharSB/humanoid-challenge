@@ -6,6 +6,8 @@ import yaml
 from src.environment.world import World
 from src.environment.tasks import task_from_yaml
 
+from src.simulation.runner import run_episode
+
 CONFIG_PATH = Path("configs/world.yaml")
 
 def main():
@@ -64,4 +66,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_episode()

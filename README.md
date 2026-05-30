@@ -1,5 +1,6 @@
 # humanoid-challenge
 
+# Challenge Description
 https://thehumanoid.ai/
 
 Intern Challenge: LLM Agent in a Virtual World
@@ -32,3 +33,9 @@ Whether the agent can actually accomplish tasks, not just generate plausible tex
 Thoughtfulness about observation representation — what does the agent need to know, and how do you tell it?
 Creativity in the world, the tasks, or the agent's capabilities
 Simplicity and usability of your solution
+
+# How to Run
+
+# Example IN/OUT
+
+# Design Choices

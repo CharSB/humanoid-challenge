@@ -1,23 +1,4 @@
-grid:
-  width: 10
-  height: 10
-
-agent:
-  start_x: 0
-  start_y: 0
-
-objects:
-  - type: short_rock
-    x: 2
-    y: 3
-  - type: tall_rock
-    x: 4
-    y: 4
-  - type: key
-    colour: red
-    x: 1
-    y: 5
-  - type: door
-    colour: red
-    x: 6
-    y: 5
+provider: anthropic
+model: claude-sonnet-4-20250514
+max_ticks: 100
+temperature: 0.3
