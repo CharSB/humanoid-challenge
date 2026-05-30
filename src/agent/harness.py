@@ -1,10 +1,18 @@
 import time
+import signal
+import sys
+
 from src.environment.world import World
 from src.environment.tasks import Task
+
 from src.agent.observation import build_observation
 from src.agent.parser import parse_action
 from src.agent.actions import MoveAction, PickUpAction, UseKeyAction
+
 from src.simulation.evaluator import check_task_complete
+
+from src.utils.logging import EpisodeLogger
+
 
 class AgentHarness:
     def __init__(self, world: World, task: Task, client, max_ticks: int = 100):
@@ -12,64 +20,91 @@ class AgentHarness:
         self.task = task
         self.client = client
         self.max_ticks = max_ticks
+        self.logger = EpisodeLogger(task_name=type(task).__name__.lower())
     
-    def run(self) -> bool:
-        """
+    """
         Run the observe -> think -> act loop.
         Returns True if the task was completed, False if max ticks reached.
-        """
-        
+    """
+    def run(self) -> bool:
         print("=== LLM Agent World ===")
         print(f"Task: {self.task.description}")
         print()
         print(self.world)
-        
-        while self.world.tick < self.max_ticks:
-            if check_task_complete(self.world, self.task):
-                print(f"\nTask complete in {self.world.tick} ticks.")
-                return True
 
-            observation = build_observation(self.world, self.task)
-            raw = self.client.complete(observation)
+        success = False
 
-            print(f"\n[Tick {self.world.tick}] LLM response: {raw}")
+        try:
+            while self.world.tick < self.max_ticks:
+                if check_task_complete(self.world, self.task):
+                    print(f"\nTask complete in {self.world.tick} ticks.")
+                    success = True
+                    break
 
-            try:
-                action = parse_action(raw)
-            except ValueError as e:
-                print(f"Parse error: {e} — skipping turn.")
-                continue
+                observation = build_observation(self.world, self.task)
+                raw = self.client.complete(observation)
 
-            self._execute(action)
-            print()
-            print(self.world)
+                print(f"\n[Tick {self.world.tick}] LLM response: {raw}")
 
-        print(f"\nMax ticks ({self.max_ticks}) reached. Task incomplete.")
-        return False
+                try:
+                    action = parse_action(raw)
+                except ValueError as e:
+                    result = f"parse_error: {e}"
+                    print(f"Parse error: {e} — skipping turn.")
+                    self.logger.log_tick(self.world, observation, raw, "invalid", result)
+                    continue
+
+                result = self._execute(action)
+                print()
+                print(self.world)
+
+                self.logger.log_tick(
+                    world=self.world,
+                    observation=observation,
+                    raw_response=raw,
+                    parsed_action=str(action),
+                    action_result=result,
+                )
+
+            if not success:
+                print(f"\nMax ticks ({self.max_ticks}) reached. Task incomplete.")
+
+        except KeyboardInterrupt:
+            print("\n\nInterrupted.")
+            success = False
+
+        finally:
+            self.logger.finish(success=success, total_ticks=self.world.tick)
+            log_path = self.logger.save()
+            print(f"Episode log saved to: {log_path}")
+
+        return success
     
-    def _execute(self, action) -> None:
+    def _execute(self, action) -> str:
         match action:
             case MoveAction(direction=d, steps=n):
+                blocked = False
                 for _ in range(n):
                     moved = self.world.move_agent(d)
                     if not moved:
-                        print(f"Blocked moving {d}.")
+                        blocked = True
                         break
+                result = f"moved {d}" + (f" (blocked after {_ } steps)" if blocked else f" x{n}")
+
 
             case PickUpAction():
                 obj = self.world.pick_up()
-                if obj:
-                    print(f"Picked up: {obj.name}")
-                else:
-                    print("Nothing to pick up.")
+                result = f"picked_up {obj.name}" if obj else "pick_up failed: nothing here"
+                print(result)
+
 
             case UseKeyAction():
                 success = self.world.use_key_on_door()
-                if success:
-                    print("Door unlocked.")
-                else:
-                    print("Could not unlock door.")
+                result = "door unlocked" if success else "use_key failed: no unlockable door faced"
+                print(result)
         
         if action.memory_note:
             self.world.memory.add(action.memory_note)
             print(f"Memory noted: {action.memory_note}")
+            
+        return result

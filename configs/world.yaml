@@ -26,8 +26,8 @@ objects:
     y: 5
   - type: door
     colour: red
-    x: 6
-    y: 5
+    x: 9
+    y: 9
 
 task:
   type: reach_goal
