@@ -38,6 +38,7 @@ The core challenge isn't the world itself — it's the harness: the interface be
 
 I created a 2D grid-based world for an LLM agent to navigate, explore, and comple goals. The agent is able to "perceive" its environment through a field-of-view cone, limiting it to only reason about what is infront of it. The agent is fed a prompt containing its: task, agent's state, memory, what it can see (ASCII grid), adjacent cells, available actions, rules of the game, and response type. The agent is then able to reason about all of this information and output a structured response from the avialable actions. I also chose to make the program relatively model agnostic. As I do not have any API keys I chose to create a manual mode as well, where I copy and paste prompts and responses between the program and an LLM. 
 
+```
 === LLM Agent World ===
 Task: Collect the red key and open the red door.
 
@@ -53,6 +54,7 @@ Agent View            |  Full Map
 ? ? ? . . . ? ? ? ?  |  . . . . . R . . . .
 ? ? ? . . D ? ? ? ?  |  . . . . . D . . . .
 ? ? ? ? ? ? ? ? ? ?  |  . k . . . R . . . .
+```
 
 ## Features
 
@@ -67,7 +69,7 @@ Agent View            |  Full Map
 - **61 unit tests** across world mechanics, action parsing, and task evaluation
 
 ## Project Structure
-
+```
 humanoid-challenge/
 ├── main.py                 # Main file used to run program
 ├── .env                    # Used to configure API keys
@@ -86,6 +88,7 @@ humanoid-challenge/
 │   └── key_and_door/       # Find key, unlock door, reach goal
 ├── tests/                  # pytest unit tests
 └── logs/episodes/          # JSON + plain text episode logs
+```
 
 ---
 
