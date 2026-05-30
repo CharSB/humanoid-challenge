@@ -99,7 +99,7 @@ class AgentHarness:
 
 
             case UseKeyAction():
-                success = self.world.use_key_on_door()
+                success = self.world.unlock()
                 result = "door unlocked" if success else "use_key failed: no unlockable door faced"
                 print(result)
         
