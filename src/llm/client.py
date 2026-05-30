@@ -81,6 +81,8 @@ def client_from_config(cfg: dict) -> LLMClient:
     provider = cfg.get("provider", "anthropic").lower()
     if provider not in PROVIDERS:
         raise ValueError(f"Unknown provider: '{provider}'. Choose from {list(PROVIDERS)}")
+    if provider == "manual":
+        return ManualClient()
     return PROVIDERS[provider](
         model=cfg["model"],
         temperature=cfg.get("temperature", 0.3)
