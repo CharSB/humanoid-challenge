@@ -51,12 +51,31 @@ class OpenAIClient(LLMClient):
         )
         return response.choices[0].message.content.strip()
 
+class ManualClient(LLMClient):
+    def complete(self, prompt: str) -> str:
+        print("\n" + "="*60)
+        print("PROMPT TO SEND TO LLM:")
+        print("="*60)
+        print(prompt)
+        print("="*60)
+        print("Paste the LLM response below, then press Enter twice:")
+        print("="*60 + "\n")
+
+        lines = []
+        while True:
+            line = input()
+            if line == "" and lines:
+                break
+            lines.append(line)
+
+        return "\n".join(lines).strip()
 
 PROVIDERS: dict[str, type[LLMClient]] = {
     "anthropic": AnthropicClient,
     "openai": OpenAIClient,
-}
+    "manual": ManualClient,
 
+}
 
 def client_from_config(cfg: dict) -> LLMClient:
     provider = cfg.get("provider", "anthropic").lower()
