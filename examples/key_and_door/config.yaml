@@ -1,0 +1,90 @@
+grid:
+  width: 10
+  height: 10
+
+agent:
+  start_x: 0
+  start_y: 0
+  start_facing: south
+
+fov:
+  max_range: 4
+  max_angle: 135
+
+objects:
+  # Dividing wall with a locked door
+  - type: tall_rock
+    x: 5
+    y: 0
+  - type: tall_rock
+    x: 5
+    y: 1
+  - type: tall_rock
+    x: 5
+    y: 2
+  - type: tall_rock
+    x: 5
+    y: 3
+  - type: door
+    colour: red
+    x: 5
+    y: 4
+  - type: tall_rock
+    x: 5
+    y: 5
+  - type: tall_rock
+    x: 5
+    y: 6
+  - type: tall_rock
+    x: 5
+    y: 7
+  - type: tall_rock
+    x: 5
+    y: 8
+  - type: tall_rock
+    x: 5
+    y: 9
+
+  # Key is hidden behind some obstacles on the left side
+  - type: tall_rock
+    x: 2
+    y: 2
+  - type: tall_rock
+    x: 2
+    y: 3
+  - type: tall_rock
+    x: 2
+    y: 4
+  - type: tall_rock
+    x: 3
+    y: 4
+  - type: short_rock
+    x: 1
+    y: 6
+  - type: short_rock
+    x: 3
+    y: 6
+
+  - type: key
+    colour: red
+    x: 2
+    y: 6
+
+  # Some obstacles on the right side after the door
+  - type: short_rock
+    x: 7
+    y: 2
+  - type: short_rock
+    x: 7
+    y: 5
+  - type: tall_rock
+    x: 8
+    y: 7
+  - type: tall_rock
+    x: 8
+    y: 8
+
+task:
+  type: reach_goal
+  x: 9
+  y: 9

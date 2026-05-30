@@ -1,5 +1,6 @@
 from __future__ import annotations
 import yaml
+import argparse
 from pathlib import Path
 
 from src.environment.world import World
@@ -7,8 +8,8 @@ from src.environment.tasks import task_from_yaml
 from src.llm.client import client_from_config
 from src.agent.harness import AgentHarness
 
-WORLD_CONFIG  = Path("configs/world.yaml")
-AGENT_CONFIG  = Path("configs/agent.yaml")
+WORLD_CONFIG = Path("configs/world.yaml")
+AGENT_CONFIG = Path("configs/agent.yaml")
 
 
 def run_episode(
@@ -36,4 +37,18 @@ def run_episode(
 
 
 if __name__ == "__main__":
-    run_episode()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--world",
+        type=Path,
+        default=WORLD_CONFIG,
+        help="Path to world config yaml"
+    )
+    parser.add_argument(
+        "--agent",
+        type=Path,
+        default=AGENT_CONFIG,
+        help="Path to agent config yaml"
+    )
+    args = parser.parse_args()
+    run_episode(world_config=args.world, agent_config=args.agent)

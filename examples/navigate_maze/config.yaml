@@ -1,0 +1,238 @@
+# Maze layout (^ = start, G = goal, R = wall, . = open, * = solution path):
+#
+# row  0: . ^ R . . . R . . . . .
+# row  1: R * R . R . R . R R R R
+# row  2: * * R . R . . . . . . R
+# row  3: * R R R R R R R R R . R
+# row  4: * * * * . R * * * R . R
+# row  5: R R R * R R * R * R . R
+# row  6: . . R * R * * R * R . .
+# row  7: . R R * R * R R * R R R
+# row  8: . . . * * * R . * * * R
+# row  9: R R R R . R R . R R * R
+# row 10: . . . R . R . . R . * R
+# row 11: R R . R . R . R R R G .
+
+grid:
+  width: 12
+  height: 12
+
+agent:
+  start_x: 0
+  start_y: 0
+  start_facing: south
+
+fov:
+  max_range: 4
+  max_angle: 135
+
+objects:
+  - type: tall_rock
+    x: 2
+    y: 0
+  - type: tall_rock
+    x: 6
+    y: 0
+  - type: tall_rock
+    x: 0
+    y: 1
+  - type: tall_rock
+    x: 2
+    y: 1
+  - type: tall_rock
+    x: 4
+    y: 1
+  - type: tall_rock
+    x: 6
+    y: 1
+  - type: tall_rock
+    x: 8
+    y: 1
+  - type: tall_rock
+    x: 9
+    y: 1
+  - type: tall_rock
+    x: 10
+    y: 1
+  - type: tall_rock
+    x: 11
+    y: 1
+  - type: tall_rock
+    x: 2
+    y: 2
+  - type: tall_rock
+    x: 4
+    y: 2
+  - type: tall_rock
+    x: 11
+    y: 2
+  - type: tall_rock
+    x: 1
+    y: 3
+  - type: tall_rock
+    x: 2
+    y: 3
+  - type: tall_rock
+    x: 3
+    y: 3
+  - type: tall_rock
+    x: 4
+    y: 3
+  - type: tall_rock
+    x: 5
+    y: 3
+  - type: tall_rock
+    x: 6
+    y: 3
+  - type: tall_rock
+    x: 7
+    y: 3
+  - type: tall_rock
+    x: 8
+    y: 3
+  - type: tall_rock
+    x: 9
+    y: 3
+  - type: tall_rock
+    x: 11
+    y: 3
+  - type: tall_rock
+    x: 5
+    y: 4
+  - type: tall_rock
+    x: 9
+    y: 4
+  - type: tall_rock
+    x: 11
+    y: 4
+  - type: tall_rock
+    x: 0
+    y: 5
+  - type: tall_rock
+    x: 1
+    y: 5
+  - type: tall_rock
+    x: 2
+    y: 5
+  - type: tall_rock
+    x: 4
+    y: 5
+  - type: tall_rock
+    x: 5
+    y: 5
+  - type: tall_rock
+    x: 7
+    y: 5
+  - type: tall_rock
+    x: 9
+    y: 5
+  - type: tall_rock
+    x: 11
+    y: 5
+  - type: tall_rock
+    x: 2
+    y: 6
+  - type: tall_rock
+    x: 4
+    y: 6
+  - type: tall_rock
+    x: 7
+    y: 6
+  - type: tall_rock
+    x: 9
+    y: 6
+  - type: tall_rock
+    x: 1
+    y: 7
+  - type: tall_rock
+    x: 2
+    y: 7
+  - type: tall_rock
+    x: 4
+    y: 7
+  - type: tall_rock
+    x: 6
+    y: 7
+  - type: tall_rock
+    x: 7
+    y: 7
+  - type: tall_rock
+    x: 9
+    y: 7
+  - type: tall_rock
+    x: 10
+    y: 7
+  - type: tall_rock
+    x: 11
+    y: 7
+  - type: tall_rock
+    x: 6
+    y: 8
+  - type: tall_rock
+    x: 11
+    y: 8
+  - type: tall_rock
+    x: 0
+    y: 9
+  - type: tall_rock
+    x: 1
+    y: 9
+  - type: tall_rock
+    x: 2
+    y: 9
+  - type: tall_rock
+    x: 3
+    y: 9
+  - type: tall_rock
+    x: 5
+    y: 9
+  - type: tall_rock
+    x: 6
+    y: 9
+  - type: tall_rock
+    x: 8
+    y: 9
+  - type: tall_rock
+    x: 9
+    y: 9
+  - type: tall_rock
+    x: 11
+    y: 9
+  - type: tall_rock
+    x: 3
+    y: 10
+  - type: tall_rock
+    x: 5
+    y: 10
+  - type: tall_rock
+    x: 8
+    y: 10
+  - type: tall_rock
+    x: 11
+    y: 10
+  - type: tall_rock
+    x: 0
+    y: 11
+  - type: tall_rock
+    x: 1
+    y: 11
+  - type: tall_rock
+    x: 3
+    y: 11
+  - type: tall_rock
+    x: 5
+    y: 11
+  - type: tall_rock
+    x: 7
+    y: 11
+  - type: tall_rock
+    x: 8
+    y: 11
+  - type: tall_rock
+    x: 9
+    y: 11
+
+task:
+  type: reach_goal
+  x: 11
+  y: 11
